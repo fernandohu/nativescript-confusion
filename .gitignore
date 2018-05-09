@@ -1,3 +1,12 @@
+node_modules
+tags
+**/*.js.map
+**/*.metadata.json
+
+app/**/*.js
+app/global.d.ts
+platforms
+
 # Logs
 logs
 *.log
