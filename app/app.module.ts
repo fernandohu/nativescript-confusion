@@ -13,6 +13,8 @@ import { DrawerComponent } from "./shared/drawer/drawer.component";
 import { HomeComponent } from './home/home.component';
 import { PromotionService } from './services/promotion.service';
 import { LeaderService } from './services/leader.service';
+import { ContactUsComponent } from "~/contact/contact.component";
+import { AboutComponent } from "~/about/about.component";
 
 // Uncomment and add to NgModule imports if you need to use two-way binding
 // import { NativeScriptFormsModule } from "nativescript-angular/forms";
@@ -35,7 +37,9 @@ import { LeaderService } from './services/leader.service';
         MenuComponent,
         DishdetailComponent,
         DrawerComponent,
-        HomeComponent
+        HomeComponent,
+        ContactUsComponent,
+        AboutComponent
     ],
     providers: [
         {provide: 'BaseURL', useValue: baseURL},
