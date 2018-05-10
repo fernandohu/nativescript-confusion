@@ -10,6 +10,9 @@ import { baseURL } from './shared/baseurl';
 import { DishdetailComponent } from './dishdetail/dishdetail.component';
 import { NativeScriptUISideDrawerModule } from "nativescript-telerik-ui/sidedrawer/angular";
 import { DrawerComponent } from "./shared/drawer/drawer.component";
+import { HomeComponent } from './home/home.component';
+import { PromotionService } from './services/promotion.service';
+import { LeaderService } from './services/leader.service';
 
 // Uncomment and add to NgModule imports if you need to use two-way binding
 // import { NativeScriptFormsModule } from "nativescript-angular/forms";
@@ -31,12 +34,15 @@ import { DrawerComponent } from "./shared/drawer/drawer.component";
         AppComponent,
         MenuComponent,
         DishdetailComponent,
-        DrawerComponent
+        DrawerComponent,
+        HomeComponent
     ],
     providers: [
         {provide: 'BaseURL', useValue: baseURL},
         DishService,
-        ProcessHTTPMsgService
+        ProcessHTTPMsgService,
+        PromotionService,
+        LeaderService
     ],
     schemas: [
         NO_ERRORS_SCHEMA
