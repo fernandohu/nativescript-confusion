@@ -15,6 +15,7 @@ import { PromotionService } from './services/promotion.service';
 import { LeaderService } from './services/leader.service';
 import { ContactUsComponent } from "~/contact/contact.component";
 import { AboutComponent } from "~/about/about.component";
+import { FavoriteService } from '~/services/favorite.service';
 
 // Uncomment and add to NgModule imports if you need to use two-way binding
 // import { NativeScriptFormsModule } from "nativescript-angular/forms";
@@ -46,7 +47,8 @@ import { AboutComponent } from "~/about/about.component";
         DishService,
         ProcessHTTPMsgService,
         PromotionService,
-        LeaderService
+        LeaderService,
+        FavoriteService
     ],
     schemas: [
         NO_ERRORS_SCHEMA

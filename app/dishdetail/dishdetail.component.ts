@@ -5,6 +5,8 @@ import { DishService } from '../services/dish.service';
 import { ActivatedRoute, Params } from '@angular/router';
 import { RouterExtensions } from 'nativescript-angular/router';
 import 'rxjs/add/operator/switchMap';
+import { FavoriteService } from '../services/favorite.service';
+import { Toasty } from 'nativescript-toasty'
 
 @Component({
   selector: 'app-dishdetail',
@@ -17,10 +19,14 @@ export class DishdetailComponent implements OnInit {
   dish: Dish;
   comment: Comment;
   errMess: string;
+  avgstars: string;
+  numcomments: number;
+  favorite: boolean = false;
 
   constructor(private dishservice: DishService,
     private route: ActivatedRoute,
     private routerExtensions: RouterExtensions,
+    private favoriteservice: FavoriteService,
     @Inject('BaseURL') private BaseURL) { }
 
   ngOnInit() {
@@ -29,6 +35,28 @@ export class DishdetailComponent implements OnInit {
       .switchMap((params: Params) => this.dishservice.getDish(+params['id']))
       .subscribe(dish => this.dish = dish,
           errmess => { this.dish = null; this.errMess = <any>errmess; });
+
+    this.route.params
+      .switchMap((params: Params) => this.dishservice.getDish(+params['id']))
+      .subscribe(dish => { 
+          this.dish = dish;
+          this.favorite = this.favoriteservice.isFavorite(this.dish.id);
+          this.numcomments = this.dish.comments.length;
+
+          let total = 0;
+          this.dish.comments.forEach(comment => total += comment.rating);
+          this.avgstars = (total/this.numcomments).toFixed(2);
+        },
+        errmess => { this.dish = null; this.errMess = <any>errmess; });
+  }
+
+  addToFavorites() {
+    if (!this.favorite) {
+      console.log('Adding to Favorites', this.dish.id);
+      this.favorite = this.favoriteservice.addFavorite(this.dish.id);
+      const toast = new Toasty("Added Dish "+ this.dish.id, "short", "bottom");
+      toast.show();
+    }
   }
 
   goBack(): void {
