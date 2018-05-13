@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, ViewContainerRef } from '@angular/core';
 import { Dish } from '../shared/dish';
 import { Comment } from '../shared/comment';
 import { DishService } from '../services/dish.service';
@@ -9,6 +9,8 @@ import { FavoriteService } from '../services/favorite.service';
 import { Toasty } from 'nativescript-toasty'
 import { TNSFontIconService } from 'nativescript-ngx-fonticon';
 import { action } from 'tns-core-modules/ui/dialogs/dialogs';
+import { ModalDialogOptions, ModalDialogService } from 'nativescript-angular/modal-dialog';
+import { CommentComponent } from '~/comment/comment.component';
 
 @Component({
   selector: 'app-dishdetail',
@@ -24,12 +26,15 @@ export class DishdetailComponent implements OnInit {
   avgstars: string;
   numcomments: number;
   favorite: boolean = false;
+  commentHeight: number;
 
   constructor(private dishservice: DishService,
     private route: ActivatedRoute,
     private routerExtensions: RouterExtensions,
     private favoriteservice: FavoriteService,
     private fonticon: TNSFontIconService,
+    private vcRef: ViewContainerRef,
+    private modalService: ModalDialogService,
     @Inject('BaseURL') private BaseURL) { }
 
   ngOnInit() {
@@ -44,11 +49,7 @@ export class DishdetailComponent implements OnInit {
       .subscribe(dish => { 
           this.dish = dish;
           this.favorite = this.favoriteservice.isFavorite(this.dish.id);
-          this.numcomments = this.dish.comments.length;
-
-          let total = 0;
-          this.dish.comments.forEach(comment => total += comment.rating);
-          this.avgstars = (total/this.numcomments).toFixed(2);
+          this.updateCommentsInfo();
         },
         errmess => { this.dish = null; this.errMess = <any>errmess; });
   }
@@ -77,6 +78,35 @@ export class DishdetailComponent implements OnInit {
       if (result == 'Add to favorites') {
         this.addToFavorites();
       }
+
+      if (result == 'Add comment') {
+        this.openCommentModal();
+      }
     });
+  }
+
+  openCommentModal() {
+    console.log('Opening modal');
+    let options: ModalDialogOptions = {
+      viewContainerRef: this.vcRef,
+      context: 'comment',
+      fullscreen: false
+    };
+
+    this.modalService.showModal(CommentComponent, options)
+      .then((comment: Comment) => {
+         if (comment) {
+          this.dish.comments.push(comment);
+          this.updateCommentsInfo();
+         } 
+      });
+  }
+
+  updateCommentsInfo() {
+    this.numcomments = this.dish.comments.length;
+          
+    let total = 0;
+    this.dish.comments.forEach((comment: Comment) => total += comment.rating);
+    this.avgstars = (total/this.numcomments).toFixed(2);
   }
 }
