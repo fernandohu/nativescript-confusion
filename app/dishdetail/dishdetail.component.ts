@@ -7,6 +7,7 @@ import { RouterExtensions } from 'nativescript-angular/router';
 import 'rxjs/add/operator/switchMap';
 import { FavoriteService } from '../services/favorite.service';
 import { Toasty } from 'nativescript-toasty'
+import { TNSFontIconService } from 'nativescript-ngx-fonticon';
 
 @Component({
   selector: 'app-dishdetail',
@@ -27,6 +28,7 @@ export class DishdetailComponent implements OnInit {
     private route: ActivatedRoute,
     private routerExtensions: RouterExtensions,
     private favoriteservice: FavoriteService,
+    private fonticon: TNSFontIconService,
     @Inject('BaseURL') private BaseURL) { }
 
   ngOnInit() {
