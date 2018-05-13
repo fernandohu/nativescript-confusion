@@ -17,6 +17,8 @@ import { ContactUsComponent } from "~/contact/contact.component";
 import { AboutComponent } from "~/about/about.component";
 import { FavoriteService } from '~/services/favorite.service';
 import { TNSFontIconModule } from 'nativescript-ngx-fonticon';
+import { NativeScriptUIListViewModule } from "nativescript-telerik-ui/listview/angular";
+import { FavoritesComponent } from './favorites/favorites.component';
 
 // Uncomment and add to NgModule imports if you need to use two-way binding
 // import { NativeScriptFormsModule } from "nativescript-angular/forms";
@@ -35,7 +37,8 @@ import { TNSFontIconModule } from 'nativescript-ngx-fonticon';
         NativeScriptUISideDrawerModule,
         TNSFontIconModule.forRoot({
 			'fa': './fonts/font-awesome.css' 
-		})
+        }),
+        NativeScriptUIListViewModule
     ],
     declarations: [
         AppComponent,
@@ -44,7 +47,8 @@ import { TNSFontIconModule } from 'nativescript-ngx-fonticon';
         DrawerComponent,
         HomeComponent,
         ContactUsComponent,
-        AboutComponent
+        AboutComponent,
+        FavoritesComponent
     ],
     providers: [
         {provide: 'BaseURL', useValue: baseURL},
