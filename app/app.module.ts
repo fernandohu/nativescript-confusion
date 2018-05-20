@@ -26,6 +26,7 @@ import { ReservationModalComponent } from "./reservationmodal/reservationmodal.c
 import { CommentComponent } from "~/comment/comment.component";
 import { CouchbaseService } from './services/couchbase.service';
 import { ReservationService } from "~/services/reservation.service";
+import { UserAuthComponent } from "./userauth/userauth.component"; 
 
 // Uncomment and add to NgModule imports if you need to use two-way binding
 // import { NativeScriptFormsModule } from "nativescript-angular/forms";
@@ -60,7 +61,8 @@ import { ReservationService } from "~/services/reservation.service";
         FavoritesComponent,
         ReservationComponent,
         ReservationModalComponent,
-        CommentComponent
+        CommentComponent,
+        UserAuthComponent
     ],
     entryComponents: [
         ReservationModalComponent,
