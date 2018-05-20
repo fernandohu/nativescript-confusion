@@ -5,6 +5,7 @@ import { getString, setString } from 'application-settings';
 import { RouterExtensions } from 'nativescript-angular/router';
 import * as camera from 'nativescript-camera';
 import { Image } from 'ui/image';
+import * as imagepicker from "nativescript-imagepicker";
 
 @Component({
     moduleId: module.id,
@@ -40,22 +41,6 @@ export class UserAuthComponent implements OnInit {
 
     }
 
-    takePicture() {
-        let isAvailable = camera.isAvailable();
-        if (isAvailable) {
-            camera.requestPermissions();
-            var options = { width: 100, height: 100, keepAspectRatio: false, saveToGallery: true};
-
-            camera.takePicture(options)
-                .then((imageAsset) => {
-                    let image = <Image>this.page.getViewById<Image>('myPicture');
-                    image.src = imageAsset;
-                })
-                .catch((err) => console.log('Error -> ' + err.message));
-        }
-
-    }
-
     register() {
         this.tabSelectedIndex = 1;
     }
@@ -80,6 +65,44 @@ export class UserAuthComponent implements OnInit {
             'password': this.registerForm.get('password').value});
 
             this.tabSelectedIndex = 0;
+    }
+
+    takePicture() {
+        let isAvailable = camera.isAvailable();
+        if (isAvailable) {
+            camera.requestPermissions();
+            var options = { width: 100, height: 100, keepAspectRatio: false, saveToGallery: true};
+
+            camera.takePicture(options)
+                .then((imageAsset) => {
+                    let image = <Image>this.page.getViewById<Image>('myPicture');
+                    image.src = imageAsset;
+                })
+                .catch((err) => console.log('Error -> ' + err.message));
+        }
+
+    }
+
+    getFromLibrary() {
+        console.log('Getting image from Library..');
+
+        let context = imagepicker.create({
+            mode: 'single'
+        });
+
+        context
+            .authorize()
+            .then(() => {
+                return context.present();
+            })
+            .then((selection) => {
+                selection.forEach((selected) => {
+                    let image = <Image>this.page.getViewById<Image>('myPicture');
+                    image.src = selected;
+                });
+            }).catch(function (e) {
+                
+            });
     }
 
 }
