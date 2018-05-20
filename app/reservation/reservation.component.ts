@@ -9,6 +9,7 @@ import { View, Page } from 'tns-core-modules/ui/page/page';
 import { AnimationDefinition, Animation } from 'tns-core-modules/ui/animation/animation';
 import * as enums from "ui/enums";
 import { ReservationService } from '~/services/reservation.service';
+import { CouchbaseService } from '~/services/couchbase.service';
 
 @Component({
     selector: 'app-reservation',
@@ -23,11 +24,14 @@ export class ReservationComponent extends DrawerPage implements OnInit {
 
     isFormSubmited = false;
 
+    docId: string = "reservations";
+
     constructor(private changeDetectorRef: ChangeDetectorRef,
         private formBuilder: FormBuilder,
         private modalService: ModalDialogService, 
         private page: Page,
         private reservationService: ReservationService,
+        private couchbaseService: CouchbaseService,
         private vcRef: ViewContainerRef) {
             super(changeDetectorRef);
 
@@ -91,10 +95,26 @@ export class ReservationComponent extends DrawerPage implements OnInit {
         this.animate(this.content, 0, 0, 0.2, 500).then(
             () => {
                 this.isFormSubmited = true;
-                this.reservationService.addReservation(this.reservation.value);
+                this.persistData();
                 this.animate(this.content, 1, 1, 1, 500);
             }
         ).catch(error => console.log(error));
+    }
+
+    persistData() {
+        let reservations: Array<any>;
+
+        let doc = this.couchbaseService.getDocument(this.docId);
+        if( doc == null) {
+            this.couchbaseService.createDocument({"reservations": []}, this.docId);
+        } else {
+            reservations = doc.reservations;
+        }
+
+        reservations.push(this.reservation.value);
+        this.couchbaseService.updateDocument(this.docId, {"reservations": reservations});
+
+        console.log(reservations);
     }
 
     animate(targetView: View, 
@@ -103,7 +123,7 @@ export class ReservationComponent extends DrawerPage implements OnInit {
                    opacity: number,
                    duration: number
     ): Promise<any> {
-        let a1: AnimationDefinition = {
+        let animation: AnimationDefinition = {
             target: targetView,
             scale: {
                 x: scaleX,
@@ -115,7 +135,7 @@ export class ReservationComponent extends DrawerPage implements OnInit {
         };
         
         let definitions = new Array<AnimationDefinition>();
-        definitions.push(a1);
+        definitions.push(animation);
 
         let animationSet = new Animation(definitions);
         return animationSet.play();
